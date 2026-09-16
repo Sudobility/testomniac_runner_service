@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/testomniac_runner_service",
-  "version": "0.1.204",
+  "version": "0.1.205",
   "description": "Shared scanning logic for Testomniac scanner and Chrome extension",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,14 +14,14 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "test": "vitest run",
+    "test:unit": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "bunx eslint src/",
     "lint:fix": "bunx eslint src/ --fix",
     "format": "bunx prettier --write \"src/**/*.ts\"",
     "format:check": "bunx prettier --check \"src/**/*.ts\"",
-    "verify": "bun run typecheck && bun run lint && bun run test && bun run build",
+    "verify": "bun run typecheck && bun run lint && bun run test:unit && bun run build",
     "prepublishOnly": "sh -c 'test ! -f ../workflows/scripts/check-publish-safety.cjs || node ../workflows/scripts/check-publish-safety.cjs' && bun run verify"
   },
   "files": [
@@ -37,11 +37,11 @@
   "author": "Sudobility",
   "license": "BUSL-1.1",
   "peerDependencies": {
-    "@sudobility/testomniac_types": "^0.0.107"
+    "@sudobility/testomniac_types": "^0.0.108"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
-    "@sudobility/testomniac_types": "^0.0.107",
+    "@sudobility/testomniac_types": "^0.0.108",
     "@types/node": "^25.6.0",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
