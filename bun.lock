@@ -5,11 +5,11 @@
     "": {
       "name": "testomniac_scanning_service",
       "dependencies": {
-        "@sudobility/webgraph_parser": "^0.0.9",
+        "@sudobility/webgraph_parser": "^0.0.10",
       },
       "devDependencies": {
         "@eslint/js": "^9.38.0",
-        "@sudobility/testomniac_types": "^0.0.109",
+        "@sudobility/testomniac_types": "^0.0.111",
         "@types/node": "^25.6.0",
         "@typescript-eslint/eslint-plugin": "^8.46.2",
         "@typescript-eslint/parser": "^8.46.2",
@@ -22,7 +22,7 @@
         "vitest": "^4.0.15",
       },
       "peerDependencies": {
-        "@sudobility/testomniac_types": "^0.0.109",
+        "@sudobility/testomniac_types": "^0.0.111",
       },
     },
   },
@@ -103,11 +103,11 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.109", "", { "peerDependencies": { "@sudobility/types": "^1.9.68" } }, "sha512-VmBXhz+HKXqbr+gJ0+V7PNU19hybGecRKwce5ZZX5MOXFeOg5/jz9XhV9yx4hrQfgIFS8t+A1HN6Ie2qLWjSfw=="],
+    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.111", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.111/a67ad8f476ee814f3a095089f9e34bd2620acc6e", { "peerDependencies": { "@sudobility/types": "^1.9.74" } }, "sha512-g4fP3f95SMp65k0j4z1XQf3mmzsAy71bumfZwFvb18YxnMInkweaj3wYHrLI1Ne1Pcnewe+7dq07lbLFuH0G3w=="],
 
-    "@sudobility/types": ["@sudobility/types@1.9.61", "", {}, "sha512-SODGpstB/iKfK3H/4BvJx/FBcc1h3gutUjGotyxN19VnOfWyzaDoEmW7eyoxOAYhZyXMXagSiii+NIEZvuxKog=="],
+    "@sudobility/types": ["@sudobility/types@1.9.74", "https://npm.pkg.github.com/download/@sudobility/types/1.9.74/f9ad864ba5d8d1097e7e48378ebee8aa7e129e88", {}, "sha512-jgt0F1r71qjFNiRNn/1YlL4JU65sjnzYd8Sfi+Y9z62Lu9VhIXeqWAH12u7/hmGPZqG3nxzn0V+s3sFkB1qWuQ=="],
 
-    "@sudobility/webgraph_parser": ["@sudobility/webgraph_parser@0.0.9", "", { "peerDependencies": { "@sudobility/testomniac_types": "^0.0.107" } }, "sha512-sgQf94AaMk5KBewD9iAFJKlVmDy1NkK+WE6R9TK0b7orMno6J7MBmeFKPrb4NG5txhhdNpJj43l5twzY/ilSpA=="],
+    "@sudobility/webgraph_parser": ["@sudobility/webgraph_parser@0.0.10", "https://npm.pkg.github.com/download/@sudobility/webgraph_parser/0.0.10/18ad338beb19e724e5be1efabb9042edcde2fccb", { "peerDependencies": { "@sudobility/testomniac_types": "^0.0.110" } }, "sha512-0lg7gwnNex24NEaaWhHcYln1X98BYW4Wjty1FL1wuLZdddxFELgTcIwVER97Mhq9EZoec4rLbot4aSOtvnpusg=="],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg=="],
 
