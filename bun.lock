@@ -8,21 +8,21 @@
         "@sudobility/webgraph_parser": "^0.0.10",
       },
       "devDependencies": {
-        "@eslint/js": "^9.38.0",
-        "@sudobility/testomniac_types": "^0.0.112",
-        "@types/node": "^25.6.0",
-        "@typescript-eslint/eslint-plugin": "^8.46.2",
-        "@typescript-eslint/parser": "^8.46.2",
-        "eslint": "^9.39.2",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-prettier": "^5.5.5",
-        "globals": "^16.4.0",
-        "prettier": "^3.7.4",
+        "@eslint/js": "~9.39.5",
+        "@sudobility/testomniac_types": "^0.0.113",
+        "@types/node": "~25.9.9",
+        "@typescript-eslint/eslint-plugin": "~8.72.0",
+        "@typescript-eslint/parser": "~8.72.0",
+        "eslint": "~9.39.5",
+        "eslint-config-prettier": "~10.1.8",
+        "eslint-plugin-prettier": "~5.5.7",
+        "globals": "~16.5.0",
+        "prettier": "~3.9.10",
         "typescript": "~5.9.3",
-        "vitest": "^4.0.15",
+        "vitest": "~4.1.12",
       },
       "peerDependencies": {
-        "@sudobility/testomniac_types": "^0.0.112",
+        "@sudobility/testomniac_types": "^0.0.113",
       },
     },
   },
@@ -97,9 +97,9 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.112", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.112/ce9c60a0e5eb1229fb9e220e245cbcd9788530f3", { "peerDependencies": { "@sudobility/types": "^1.9.74" } }, "sha512-CB2l6/FRmFU82wpLO/OIaEdWddNKh9cZjm8A4C8Afb/3AoM11DufA8GA4qXOHvoIjc+7njgM3fhw1RYQGtzfbw=="],
+    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.113", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.113/41eaa38b18a495dee004d32d7facdc398bb32ff1", { "peerDependencies": { "@sudobility/types": "^1.9.75" } }, "sha512-gDVbjTehEhnhFcDuQEs8KaPM6X+Kfgbvs7lbneqT4OXCvA/l8XH5dnYz94Qcv+O11fPKHMnzYobzPS5dQjJisw=="],
 
-    "@sudobility/types": ["@sudobility/types@1.9.74", "https://npm.pkg.github.com/download/@sudobility/types/1.9.74/f9ad864ba5d8d1097e7e48378ebee8aa7e129e88", {}, "sha512-jgt0F1r71qjFNiRNn/1YlL4JU65sjnzYd8Sfi+Y9z62Lu9VhIXeqWAH12u7/hmGPZqG3nxzn0V+s3sFkB1qWuQ=="],
+    "@sudobility/types": ["@sudobility/types@1.9.75", "https://npm.pkg.github.com/download/@sudobility/types/1.9.75/d041222e1a9c48b1857a25686361fa493265e572", {}, "sha512-c0IqHhNsyMxWFzv+sC8drTXid1s/yberzme5JJTYIR2CE+DxpnjFCyL0AIMKUwTQYhYKvRZG0JkWRFplirbBrw=="],
 
     "@sudobility/webgraph_parser": ["@sudobility/webgraph_parser@0.0.10", "https://npm.pkg.github.com/download/@sudobility/webgraph_parser/0.0.10/18ad338beb19e724e5be1efabb9042edcde2fccb", { "peerDependencies": { "@sudobility/testomniac_types": "^0.0.110" } }, "sha512-0lg7gwnNex24NEaaWhHcYln1X98BYW4Wjty1FL1wuLZdddxFELgTcIwVER97Mhq9EZoec4rLbot4aSOtvnpusg=="],
 
