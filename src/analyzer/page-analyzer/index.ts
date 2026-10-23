@@ -364,8 +364,7 @@ export class PageAnalyzer {
 
   private getItemKey(
     item:
-      | Pick<ActionableItem, "stableKey" | "selector">
-      | ActionableItemResponse
+      Pick<ActionableItem, "stableKey" | "selector"> | ActionableItemResponse
   ): string | null {
     const stableKey = "stableKey" in item ? item.stableKey : null;
     const selector = item.selector;

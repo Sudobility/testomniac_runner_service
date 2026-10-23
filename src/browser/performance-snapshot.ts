@@ -37,8 +37,7 @@ export async function capturePerformanceSnapshot(
 
     const round = (value: number) => Math.round(value);
     const navigation = performance.getEntriesByType("navigation")[0] as
-      | PerformanceNavigationTiming
-      | undefined;
+      PerformanceNavigationTiming | undefined;
     const resources = performance.getEntriesByType(
       "resource"
     ) as PerformanceResourceTiming[];
