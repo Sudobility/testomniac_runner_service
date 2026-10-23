@@ -9,7 +9,7 @@
       },
       "devDependencies": {
         "@eslint/js": "~9.39.5",
-        "@sudobility/testomniac_types": "^0.0.113",
+        "@sudobility/testomniac_types": "^0.0.114",
         "@types/node": "~25.9.9",
         "@typescript-eslint/eslint-plugin": "~8.72.0",
         "@typescript-eslint/parser": "~8.72.0",
@@ -22,7 +22,7 @@
         "vitest": "~4.1.12",
       },
       "peerDependencies": {
-        "@sudobility/testomniac_types": "^0.0.113",
+        "@sudobility/testomniac_types": "^0.0.114",
       },
     },
   },
@@ -97,9 +97,9 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.113", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.113/41eaa38b18a495dee004d32d7facdc398bb32ff1", { "peerDependencies": { "@sudobility/types": "^1.9.75" } }, "sha512-gDVbjTehEhnhFcDuQEs8KaPM6X+Kfgbvs7lbneqT4OXCvA/l8XH5dnYz94Qcv+O11fPKHMnzYobzPS5dQjJisw=="],
+    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.114", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.114/c50ccd8fae382a657109ecfc451b8907234338bd", { "peerDependencies": { "@sudobility/types": "^1.9.76" } }, "sha512-/N7XnF+/5W4HPHXBez1a4JUOKynvzV3MCWsj6G1SGBkZLS2Pp+l2GIvIY6aadSlvE3ZREyD00PN0FrpvsHkdYw=="],
 
-    "@sudobility/types": ["@sudobility/types@1.9.75", "https://npm.pkg.github.com/download/@sudobility/types/1.9.75/d041222e1a9c48b1857a25686361fa493265e572", {}, "sha512-c0IqHhNsyMxWFzv+sC8drTXid1s/yberzme5JJTYIR2CE+DxpnjFCyL0AIMKUwTQYhYKvRZG0JkWRFplirbBrw=="],
+    "@sudobility/types": ["@sudobility/types@1.9.76", "https://npm.pkg.github.com/download/@sudobility/types/1.9.76/71635156f72fd9461107d5f147b3dc1c49f863d0", {}, "sha512-b7maZHR5wM84VlQ+l9R+2guzSOrExog6OUNy1oCe7h0abW13syycmnLQL0g+qql0aQ84qTB4A0mJelhY3Vef4Q=="],
 
     "@sudobility/webgraph_parser": ["@sudobility/webgraph_parser@0.0.10", "https://npm.pkg.github.com/download/@sudobility/webgraph_parser/0.0.10/18ad338beb19e724e5be1efabb9042edcde2fccb", { "peerDependencies": { "@sudobility/testomniac_types": "^0.0.110" } }, "sha512-0lg7gwnNex24NEaaWhHcYln1X98BYW4Wjty1FL1wuLZdddxFELgTcIwVER97Mhq9EZoec4rLbot4aSOtvnpusg=="],
 
