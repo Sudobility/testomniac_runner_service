@@ -9,7 +9,7 @@
       },
       "devDependencies": {
         "@eslint/js": "~9.39.5",
-        "@sudobility/testomniac_types": "^0.0.114",
+        "@sudobility/testomniac_types": "^0.0.115",
         "@types/node": "~25.9.9",
         "@typescript-eslint/eslint-plugin": "~8.72.0",
         "@typescript-eslint/parser": "~8.72.0",
@@ -22,7 +22,7 @@
         "vitest": "~4.1.12",
       },
       "peerDependencies": {
-        "@sudobility/testomniac_types": "^0.0.114",
+        "@sudobility/testomniac_types": "^0.0.115",
       },
     },
   },
@@ -97,7 +97,7 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.114", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.114/c50ccd8fae382a657109ecfc451b8907234338bd", { "peerDependencies": { "@sudobility/types": "^1.9.76" } }, "sha512-/N7XnF+/5W4HPHXBez1a4JUOKynvzV3MCWsj6G1SGBkZLS2Pp+l2GIvIY6aadSlvE3ZREyD00PN0FrpvsHkdYw=="],
+    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.115", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.115/7290c396bd202629b96d55445140655997912dd1", { "peerDependencies": { "@sudobility/types": "^1.9.76" } }, "sha512-ZfzUIwh38TIJVo2hKh6HhXrXhADExAI9Dm777RrzwGyZDcuAInBJaDjVwgB4m/nRNFqjaZiqoElmggfgxCMOaQ=="],
 
     "@sudobility/types": ["@sudobility/types@1.9.76", "https://npm.pkg.github.com/download/@sudobility/types/1.9.76/71635156f72fd9461107d5f147b3dc1c49f863d0", {}, "sha512-b7maZHR5wM84VlQ+l9R+2guzSOrExog6OUNy1oCe7h0abW13syycmnLQL0g+qql0aQ84qTB4A0mJelhY3Vef4Q=="],
 
@@ -239,7 +239,7 @@
 
     "has-flag": ["has-flag@4.0.0", "", {}, "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="],
 
-    "ignore": ["ignore@7.0.13", "", {}, "sha512-2E8Q6rh+1RRSq/YdaGsNfXsEZy9FVqv6BSSrkmZJP7BnaoPnRfKL+YaofPvP+5rzdk144qSm6i4+hvPgUcbV4Q=="],
+    "ignore": ["ignore@7.0.14", "", {}, "sha512-wCBiZ77u1tuWde6G/nfOtLaCTYcFDU5yCzARzK10y+rLhzYoL7a7yEemcopcc2Mzow7gZOIjnV2ym1NYmdiJOQ=="],
 
     "import-fresh": ["import-fresh@3.3.1", "", { "dependencies": { "parent-module": "^1.0.0", "resolve-from": "^4.0.0" } }, "sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ=="],
 

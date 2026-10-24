@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/testomniac_runner_service",
-  "version": "0.1.211",
+  "version": "0.1.212",
   "description": "Shared scanning logic for Testomniac scanner and Chrome extension",
   "type": "module",
   "main": "./dist/index.js",
@@ -37,11 +37,11 @@
   "author": "Sudobility",
   "license": "BUSL-1.1",
   "peerDependencies": {
-    "@sudobility/testomniac_types": "^0.0.114"
+    "@sudobility/testomniac_types": "^0.0.115"
   },
   "devDependencies": {
     "@eslint/js": "~9.39.5",
-    "@sudobility/testomniac_types": "^0.0.114",
+    "@sudobility/testomniac_types": "^0.0.115",
     "@types/node": "~25.9.9",
     "@typescript-eslint/eslint-plugin": "~8.72.0",
     "@typescript-eslint/parser": "~8.72.0",
