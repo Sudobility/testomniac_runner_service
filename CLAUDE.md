@@ -1,254 +1,137 @@
 # Testomniac Runner Service
 
-> **Git policy — never auto-commit or auto-push.** Leave your work in the working tree.
-> Run `git commit`, `git push`, `gh pr create`, or `scripts/push_all.sh` **only when the user
-> explicitly asks in that turn**. Approval for an earlier change does not carry forward, and
-> finishing a task is not permission to commit it.
+> **Git policy — never auto-commit or auto-push.** Leave work in the working tree.
+> Run `git commit`, `git push`, `gh pr create`, or `scripts/push_all.sh` **only when
+> the user explicitly asks in that turn.** Approval for an earlier change does not carry
+> forward, and finishing a task is not permission to commit it.
+> Do not use feature branches — stay on the current branch.
 
-Shared execution and discovery library used by Testomniac runner clients.
+`@sudobility/testomniac_runner_service` is a TypeScript **library** (ESM, not a
+server despite the name). It is the shared execution + discovery engine imported
+by Testomniac runner clients. Public API: `src/index.ts` → `dist/index.js`.
 
-## Purpose
+## Stack & Commands
 
-This package owns the active runtime architecture for:
-
-- executing persisted test surfaces, cases, and element runs
-- analyzing resulting browser states
-- evaluating expertises and recording findings
-- abstracting over the browser through `BrowserAdapter`
-- abstracting over persistence through `ApiClient`
-
-The legacy `runScan()` orchestration path has been removed. `runTestRun()` is
-the runtime entry point.
-
-## Scan Lifecycle
-
-The executor now calls `api.scanNext()` instead of making multiple sequential
-API calls per interaction. Three client methods drive the scan:
-
-- `scanBegin()` — returns the first interaction (synthetic navigate to URL)
-- `scanNext()` — single call: completes interaction + persists page state + runs generators server-side + persists findings + returns next interaction
-- `scanEnd()` — triggers persona and scenario detection
-
-The following old client methods have been removed: `ensurePageStateCombined`,
-`generateSurfaceInteractions`, `generateAllSurfaceInteractions`,
-`completeInteractionRunCombined`, `detectPersonasAndScenarios`, `detectPersonas`.
-
-Test interaction generators now run server-side in `testomniac_api`'s
-`src/generators/` directory. The `src/analyzer/page-analyzer/generators/`
-directory has been deleted from this package.
-
-## Core Model
-
-Persistent coverage:
-
-- `test_surface_bundle`
-- `test_surface`
-- `test_element`
-- `test_action`
-
-Run records:
-
-- `test_run`
-- `test_surface_bundle_run`
-- `test_surface_run`
-- `test_element_run`
-- `test_run_finding`
-
-## Execution Flow
-
-1. A client calls `runTestRun()`.
-2. The runner claims the `test_run`.
-3. It loads the active bundle run and iterates pending surface runs.
-4. For each surface run, it iterates pending element runs whose dependencies are
-   ready.
-5. `executeTestElement()` navigates, recreates dependency setup when needed,
-   executes actions, gathers runtime artifacts, and runs expertises.
-6. The executor calls `api.scanNext()` which handles page state persistence,
-   generator execution (server-side), and finding persistence in a single call.
-7. The runner completes surface runs, bundle runs, and the root test run.
-
-## Replaying dependency setup
-
-Step 5 above — "recreates dependency setup" — replays every interaction in the
-chain before running the interaction's own steps. Two rules govern what may be
-skipped, and both were learned by breaking them:
-
-**Replay hover chains in full.** A hover that opens a popup menu is the setup
-for the hover that moves onto an item inside that menu; moving from the trigger
-into the menu is what keeps it open. Skipping the first removes the step that
-opens the menu the second needs. The full model lives in `testomniac_api`'s
-CLAUDE.md under "How a hover becomes interactions" — read it before optimising
-anything here, because the step counts alone are consistent with a wrong
-reading of it.
-
-**A setup step that fails is expected, so it should fail fast.** Setup is
-replayed against a page that has moved on, and a missing control is caught,
-logged as skipped, and stepped over. `SETUP_REPLAY_TIMEOUT_MS` is one second
-rather than the adapter's five: a control the page already has is either there
-or it is not. Measured on a live scan, that timeout was 5.6s of the 5.6s
-between an interaction starting and its own first step.
-
-Beware of measuring a skip as a saving. Removing steps that were already
-failing looks free and is not: the work they were meant to do simply stops
-happening.
-
-## Discovery Rules
-
-- Every actionable element starts with a hover test element.
-- After hover:
-  - if no new actionable items appear, generate a dependent click test element
-  - if new actionable items appear, generate dependent hover test elements from
-    the hover target page state
-- `PageAnalyzer` owns target-page-state creation and follow-up case generation.
-- Expertises do not generate coverage.
-
-## Key Components
-
-- [`src/adapter.ts`](src/adapter.ts): browser abstraction
-- [`src/api/client.ts`](src/api/client.ts): scanner API client
-- [`src/orchestrator/runner.ts`](src/orchestrator/runner.ts): `runTestRun()`
-- [`src/orchestrator/test-element-executor.ts`](src/orchestrator/test-element-executor.ts):
-  single-case execution
-- [`src/analyzer/page-analyzer.ts`](src/analyzer/page-analyzer.ts):
-  stripped-down (~573 lines) — finding dedup, expectation generation, hover-to-click only.
-  Generators have moved to `testomniac_api`.
-- [`src/expertise`](src/expertise): expertise system
-- [`src/extractors`](src/extractors): actionable-item extraction
-- [`src/scanner/component-detector.ts`](src/scanner/component-detector.ts):
-  scaffold detection
-- [`src/scanner/pattern-detector.ts`](src/scanner/pattern-detector.ts):
-  pattern detection
-
-## Expertise System
-
-Seven expertise modules evaluate page state and create findings:
-
-### TesterExpertise (`src/expertise/tester-expertise.ts`)
-Evaluates 37+ expectation types via specialized checker modules:
-
-| Category | Expectation Types |
-|----------|------------------|
-| **Page Load** | `page_loaded`, `page_responsive`, `loading_completes`, `media_loaded`, `video_playable` |
-| **Console/Network** | `no_console_errors` (errors + significant warnings like "deprecated", "not found"), `no_network_errors` (4xx/5xx + status 0 DNS failures) |
-| **Form Validation** | `validation_message_visible`, `error_state_visible`, `error_state_cleared`, `form_submitted_successfully`, `required_error_shown_for_field`, `field_error_clears_after_fix` |
-| **Text Input** | `input_value` (text, phone, date, number, password, select inputs) |
-| **Selection** | `element_checked`, `element_unchecked` (checkbox, radio, switch, tabs) |
-| **Commerce** | `count_changed` (cart/quantity), `cart_summary_changed`, `collection_order_changed` |
-| **Network Intent** | `network_request_made` (GET/POST/ANY), `no_duplicate_mutation_requests` |
-| **Search** | `results_changed`, `results_restored`, `empty_state_visible` |
-| **Navigation** | `url_unchanged`, `navigation_or_state_changed`, `variant_state_changed` |
-| **Dialog** | `modal_opened`, `dialog_closed`, `focus_returned` |
-| **Feedback** | `feedback_visible`, `feedback_not_duplicated` |
-| **Keyboard** | `element_focused`, `expanded_state_changed` |
-| **Persistence** | `state_persists_after_reload`, `back_navigation_restores_state`, `forward_navigation_reapplies_state` |
-| **List** | `row_count_changed` |
-
-### ContentExpertise (`src/expertise/content-expertise.ts`)
-- Meaningful body text (min 120 chars)
-- Single H1 heading
-- Placeholder content detection (lorem ipsum, TODO, coming soon)
-- Image alt text coverage
-- Language consistency
-- Broken link pattern detection (URL typos like `/stored/` instead of `/store/`)
-- Label/context mismatch (e.g., "Select Shirt Size" on a coat product)
-- Currency display consistency (selected currency matches price symbols)
-- Duplicate element IDs
-- Heading hierarchy gaps (h1 → h3 skipping h2)
-- Hardcoded localhost/dev/staging URLs in production
-- Outdated copyright year in footer
-- Orphaned form labels (for="id" where ID doesn't exist)
-
-### UiExpertise (`src/expertise/ui-expertise.ts`)
-- Main content landmark presence
-- Scaffold duplication (multiple headers/footers)
-- Active error patterns on page load
-- Interactive control density
-- Social share button integrity (functional links vs dead divs)
-- Breadcrumb consistency
-
-### SecurityExpertise (`src/expertise/security-expertise.ts`)
-- API keys in URLs
-- Insecure HTTP requests
-
-### PerformanceExpertise (`src/expertise/performance-expertise.ts`)
-- Render-blocking resource failures
-- Duplicate mutation requests (same POST/PUT called multiple times)
-- Slow network responses (> 3 seconds)
-
-### SeoExpertise (`src/expertise/seo-expertise.ts`)
-- Title, meta description, keywords, canonical, Open Graph tags
-
-### AccessibilityExpertise (`src/expertise/accessibility-expertise.ts`)
-- Document language, main landmark, form label association, image alt text, dialog labeling
-
-## Page Health Evaluator (`src/scanner/page-health-evaluator.ts`)
-
-Browser-side checks running via `adapter.evaluate()` during each test interaction:
-
-| Check | Detects |
-|-------|---------|
-| `broken_image` | Images with `naturalWidth === 0` (failed to load) |
-| `element_overlap` | Interactive elements obscured by overlapping content (via `elementFromPoint`) |
-| `dead_social_button` | Social share icons without links or click handlers |
-| `cart_math_error` | Subtotal + shipping ≠ grand total |
-| `grammar_error` | Singular/plural mismatches ("1 results"), result count vs actual item count |
-| `defunct_service` | Links to MySpace, Google+, Vine |
-| `missing_price` | Product pages without visible price or "Login for Pricing" |
-| `inconsistent_grid` | Product grid items with >50% height deviation |
-| Result count validation | "Showing N results" vs actual visible items |
-| Filter count validation | Sidebar filter count sum vs total products |
-| `empty_link` | Visible links with `href="#"` or empty href |
-| `broken_anchor` | `href="#id"` where `#id` doesn't exist on page |
-| `missing_noopener` | External `target="_blank"` links without `rel="noopener"` |
-
-## Test Interaction Generators (moved to testomniac_api)
-
-The 12 discovery-time generators have been moved server-side to `testomniac_api`'s
-`src/generators/` directory. They now run as part of the `/scan/next` endpoint.
-The `src/analyzer/page-analyzer/generators/` directory has been deleted from
-this package. See `testomniac_api/CLAUDE.md` for the full generator list.
-
-## Login Flow (`src/orchestrator/login-manager.ts`)
-
-- **LoginManager**: State machine with `isInLoginFlow` (suspends scope boundary) and `isLoggedIn` tracking
-- **Login detection** (`src/scanner/login-detector.ts`): Heuristic signals — URL patterns, password fields, email+password forms, SSO buttons, login headings. Confidence: high/medium/low.
-- **SSO handler** (`src/orchestrator/sso-handler.ts`): Provider-specific flows for Google, Microsoft, GitHub, Facebook, Apple, Twitter, LinkedIn, Okta, SAML with generic fallback.
-- **Max 3 re-login attempts** before giving up.
-
-## URL Scope Boundary (`src/crawler/scope-checker.ts`)
-
-- `isWithinScopePath(url, baseUrl, scanScopePath)`: Checks same-origin + path prefix match
-- Enforced at 3 points: link extraction, pre-execution, test generation
-- Suspended during login flow via `LoginManager.isInLoginFlow()`
-
-## AI Boundary
-
-`PageAnalyzer` is not the AI pipeline. Structural decomposition in the active
-runtime is deterministic. The `src/ai/` directory has been deleted (dead code);
-AI-driven generation now happens server-side in `testomniac_api`.
-
-## Removed Code and Dependencies
-
-- `src/analyzer/page-analyzer/generators/` — 12 generators moved to `testomniac_api`
-- `src/ai/` — deleted (dead code)
-- Dependencies removed: `openai`, `react`, `zustand`
-
-## Commands
+- Bun runs scripts and installs deps; the build is plain `tsc`. Tests: vitest.
+- `@sudobility/*` deps resolve from GitHub Packages (`.npmrc`) — install needs an
+  authed read token.
 
 ```bash
-bun run typecheck
-bun run test
-bun run build
+bun install
+bun run build       # tsc -p tsconfig.build.json -> dist/
+bun run typecheck   # tsc --noEmit
+bun run test:unit   # vitest run
+bun run lint        # eslint src/
+bun run verify      # typecheck + lint + test:unit + build (pre-publish gate)
 ```
 
-## Related Packages
+**Gotcha:** there is no `test` script. `bun run test` fails and `bun test` runs
+Bun's own runner (not vitest). Always use `bun run test:unit` / `test:watch`.
 
-- `testomniac_extension`: Chrome-hosted runner client (uses `ChromeAdapter`)
-- `testomniac_runner`: server-side polling worker (uses `PuppeteerAdapter`)
-- `testomniac_runner_mcp`: MCP server for AI-driven browser automation
-- `testomniac_api`: persistence and read APIs
-- `testomniac_types`: shared type definitions
+## webgraph_parser boundary (important)
 
-## Git Workflow
+`BrowserAdapter`, HTML decomposition (`decomposeHtml`), actionable-item/form
+extraction, scaffold detection (`detectScaffoldRegions`), login detection
+(`detectLoginPage`), and hashing all come from `@sudobility/webgraph_parser` and
+are re-exported by `src/index.ts`. There is **no** local `src/adapter.ts`,
+`src/extractors/`, `src/scanner/component-detector.ts`,
+`src/scanner/pattern-detector.ts`, or `src/scanner/login-detector.ts` — do not
+look for them here. The runner never touches Puppeteer/Playwright/Chrome APIs
+directly; it only calls `BrowserAdapter`.
 
-- Do not use feature branches for code changes. Always stay on the current branch.
+## Core model & terminology
+
+Persistent coverage: `test_surface_bundle` → `test_surface` → `test_interaction`
+→ `test_action` (+ `test_step`). Run records: `test_run`,
+`test_surface_bundle_run`, `test_surface_run`, `test_interaction_run`,
+`test_run_finding`. The code uses **interaction**, not "element" or "case" —
+`executeTestInteraction`, `TestInteractionResponse`, etc.
+
+## Execution flow
+
+1. A client calls `runTestRun()` (`src/orchestrator/runner.ts`).
+2. Runner claims the `test_run`, loads the active bundle run, iterates pending
+   surface runs, then pending interaction runs whose dependencies are ready.
+3. `executeTestInteraction()` (`src/orchestrator/test-interaction-executor.ts`)
+   navigates, replays dependency setup, executes actions, gathers runtime
+   artifacts, and runs expertises.
+4. It calls `api.scanNext()` — one call that completes the interaction, persists
+   page state, runs generators server-side, persists findings, and returns the
+   next interaction. `scanBegin()` starts the scan; `scanEnd()` triggers persona
+   + scenario detection.
+5. Surface runs, bundle run, then root run are completed.
+
+`runSequenceRun()` (`src/orchestrator/sequence-runner.ts`) is a second entry that
+replays an ordered interaction list for a scenario, reusing the same executor.
+
+## Scan lifecycle & generators (both server-side now)
+
+The executor makes a single `scanNext()` call per interaction instead of many
+sequential API calls. The old client methods (`ensurePageStateCombined`,
+`generateSurfaceInteractions`, `completeInteractionRunCombined`,
+`detectPersonas`, etc.) are gone. The 12 discovery-time test-interaction
+generators moved to `testomniac_api`'s `src/generators/` (run inside
+`/scan/next`); `src/analyzer/page-analyzer/generators/` was deleted here.
+
+## Replaying dependency setup (learned by breaking it)
+
+- **Replay hover chains in full.** A hover opening a popup menu is the setup for
+  the hover onto an item inside it; skipping the opener removes what the second
+  step needs. Full model is in `testomniac_api`'s CLAUDE.md ("How a hover becomes
+  interactions") — read it before optimising step counts here.
+- **A failing setup step is expected — fail it fast.** Setup replays against a
+  moved-on page; a missing control is caught, logged as skipped, stepped over.
+  `SETUP_REPLAY_TIMEOUT_MS` is 1s (not the adapter's 5s): a control already
+  rendered is there or it is not. Removing "already-failing" steps is not free —
+  the work they were meant to do simply stops happening.
+
+## Discovery rules
+
+- Every actionable element starts with a hover interaction.
+- After hover: no new actionable items → dependent click interaction; new items
+  → dependent hover interactions from the hover target page state.
+- `PageAnalyzer` (`src/analyzer/index.ts`, ~573 lines) owns target-page-state
+  creation and follow-up generation; it does finding dedup, expectation
+  generation, and hover-to-click only. Structural decomposition is deterministic,
+  not AI (the old `src/ai/` dir is deleted; AI generation is server-side).
+- Expertises evaluate observed results; they do **not** generate coverage.
+
+## Expertise system (`src/expertise/`)
+
+`createDefaultExpertises()` builds seven; `tester` is always included even if
+not requested. Each is one file in `src/expertise/` (`*-expertise.ts`):
+
+- `tester` — 37+ expectation types via checker modules in `src/expertise/tester/`
+  (page load, console/network, form validation, input values, selection,
+  commerce, network intent, search, navigation, dialog, feedback, keyboard,
+  persistence, list).
+- `content`, `ui`, `security`, `performance`, `seo`, `accessibility` — page-level
+  quality/correctness checks.
+- `src/scanner/page-health-evaluator.ts` runs browser-side DOM checks via
+  `adapter.evaluate()` during each interaction (broken images, element overlap,
+  cart math, grammar/count mismatches, empty/broken links, missing `noopener`,
+  etc.).
+
+## Login & scope
+
+- `LoginManager` (`src/orchestrator/login-manager.ts`): state machine; while in a
+  login flow it suspends the scope boundary. Max 3 re-login attempts.
+- `src/orchestrator/sso-handler.ts`: provider flows (Google, Microsoft, GitHub,
+  Facebook, Apple, Twitter, LinkedIn, Okta, SAML) with a generic fallback.
+- `isWithinScopePath()` (`src/crawler/scope-checker.ts`): same-origin + path
+  prefix; enforced at link extraction, pre-execution, and generation; suspended
+  during login via `LoginManager.isInLoginFlow()`.
+
+## Removed / not here
+
+- `runScan()` legacy orchestration — removed; `runTestRun()` is the entry point.
+- `src/ai/`, `src/analyzer/page-analyzer/generators/` — deleted.
+- Dropped deps: `openai`, `react`, `zustand`.
+
+## Notes
+
+- `docs/ARCHITECTURE.md` and `docs/HOVER.md` are partly stale (old
+  `test_case`/`executeTestCase`/`src/adapter.ts` terminology) — trust code and
+  this file over them.
+- CI (`.github/workflows/ci-cd.yml`) calls a reusable workflow and publishes to
+  GitHub Packages on push to `main`/`develop` when secrets are set.

@@ -9,7 +9,7 @@
       },
       "devDependencies": {
         "@eslint/js": "~9.39.5",
-        "@sudobility/testomniac_types": "^0.0.116",
+        "@sudobility/testomniac_types": "^0.0.117",
         "@types/node": "~25.9.9",
         "@typescript-eslint/eslint-plugin": "~8.72.0",
         "@typescript-eslint/parser": "~8.72.0",
@@ -22,7 +22,7 @@
         "vitest": "~4.1.12",
       },
       "peerDependencies": {
-        "@sudobility/testomniac_types": "^0.0.116",
+        "@sudobility/testomniac_types": "^0.0.117",
       },
     },
   },
@@ -97,7 +97,7 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.116", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.116/725de1395cbc3664dfb871a9d1809a2b3058e93e", { "peerDependencies": { "@sudobility/types": "^1.9.78" } }, "sha512-/3axnkFLUXoS7wJpwWF4dOGGUtipVWSGmbOPCdS1HGa8RdJv/SpcuBMjBriGcbqRcks5D49BPNu/kUsvEnPDYQ=="],
+    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.117", "https://npm.pkg.github.com/download/@sudobility/testomniac_types/0.0.117/a0ceb4509ff506253f79a2345d5f73a0b87d1eac", { "peerDependencies": { "@sudobility/types": "^1.9.79" } }, "sha512-TIRVg36WhvPUSZ0OVOz5sWhFxsNvrO9z2isMVGSLbq/w5+jt3OVxAgj6fnH5rrMAd6V+c7aquwBpWZ3HsNpulg=="],
 
     "@sudobility/types": ["@sudobility/types@1.9.76", "https://npm.pkg.github.com/download/@sudobility/types/1.9.76/71635156f72fd9461107d5f147b3dc1c49f863d0", {}, "sha512-b7maZHR5wM84VlQ+l9R+2guzSOrExog6OUNy1oCe7h0abW13syycmnLQL0g+qql0aQ84qTB4A0mJelhY3Vef4Q=="],
 
